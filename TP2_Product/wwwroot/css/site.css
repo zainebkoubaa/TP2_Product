@@ -1,0 +1,516 @@
+:root {
+    --brand: #4f46e5;
+    --brand-dark: #3730a3;
+    --brand-soft: #eef2ff;
+    --ink: #1e293b;
+    --muted: #64748b;
+    --bg: #f8fafc;
+    --radius: 14px;
+    --shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+    --shadow-hover: 0 10px 30px rgba(79, 70, 229, 0.18);
+}
+
+/* ---------- Base (règles d'origine conservées) ---------- */
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    margin-bottom: 70px;
+}
+
+h1, h2, h3 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+a {
+    color: var(--brand);
+}
+
+    a:hover {
+        color: var(--brand-dark);
+    }
+
+/* Focus (règle d'origine, couleur de la marque) */
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem var(--brand);
+}
+
+/* Form floating (règles d'origine) */
+.form-floating > .form-control-plaintext::placeholder,
+.form-floating > .form-control::placeholder {
+    color: var(--bs-secondary-color);
+    text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder,
+.form-floating > .form-control:focus::placeholder {
+    text-align: start;
+}
+
+/* ---------- Navbar ---------- */
+.app-navbar {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 55%, #4f46e5 100%);
+    box-shadow: 0 4px 20px rgba(30, 27, 75, 0.35);
+}
+
+    .app-navbar .navbar-brand {
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: #fff;
+        white-space: nowrap;
+    }
+
+    .app-navbar .nav-link {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 500;
+        border-radius: 8px;
+        padding: 0.45rem 0.8rem;
+        transition: background 0.2s, color 0.2s;
+    }
+
+        .app-navbar .nav-link:hover,
+        .app-navbar .nav-link:focus {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.14);
+        }
+
+    .app-navbar .dropdown-toggle::after {
+        margin-left: 0.5em;
+    }
+
+    .app-navbar .dropdown-menu {
+        border: none;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        padding: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .app-navbar .dropdown-item {
+        border-radius: 8px;
+        padding: 0.5rem 0.9rem;
+    }
+
+        .app-navbar .dropdown-item:hover {
+            background: var(--brand-soft);
+            color: var(--brand-dark);
+        }
+
+    .app-navbar .form-control {
+        border-radius: 999px;
+        border: none;
+        padding-left: 1rem;
+        min-width: 200px;
+    }
+
+.btn-search {
+    border-radius: 999px;
+    background: #fff;
+    color: var(--brand-dark);
+    font-weight: 600;
+    border: none;
+}
+
+    .btn-search:hover {
+        background: var(--brand-soft);
+        color: var(--brand-dark);
+    }
+
+.role-badge {
+    font-size: 0.7rem;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    margin-left: 0.4rem;
+}
+
+/* ---------- Boutons ---------- */
+.btn {
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 0.5rem 1.1rem;
+    transition: transform 0.15s, box-shadow 0.2s;
+}
+
+    .btn:hover {
+        transform: translateY(-1px);
+    }
+
+.btn-primary {
+    background: var(--brand);
+    border-color: var(--brand);
+}
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+        background: var(--brand-dark);
+        border-color: var(--brand-dark);
+    }
+
+.btn-outline-primary {
+    color: var(--brand);
+    border-color: var(--brand);
+}
+
+    .btn-outline-primary:hover {
+        background: var(--brand);
+        border-color: var(--brand);
+    }
+
+/* ---------- Cartes ---------- */
+.card {
+    border: none;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.product-card {
+    transition: transform 0.25s, box-shadow 0.25s;
+}
+
+    .product-card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .product-card .card-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-card .card-footer {
+        margin-top: auto;
+    }
+
+.product-title {
+    min-height: 2.8em;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+}
+
+/* Image des cartes (règle d'origine : object-fit contain) */
+.card-img-top {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    border-radius: 5px;
+    background: #eef2f7;
+}
+
+.imageThumbnail {
+    height: 220px;
+    padding: 0.5rem;
+}
+
+.price-tag {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--brand);
+}
+
+.category-pill {
+    display: inline-block;
+    background: var(--brand-soft);
+    color: var(--brand-dark);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+}
+
+.stock-info {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+/* ---------- Disponibilité (badges de stock) ---------- */
+.image-wrap {
+    position: relative;
+}
+
+    .image-wrap .stock-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
+    }
+
+.stock-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.stock-ok {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.stock-low {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+.stock-out {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.out-of-stock .card-img-top {
+    filter: grayscale(100%);
+    opacity: 0.55;
+}
+
+.out-of-stock .price-tag {
+    color: var(--muted);
+}
+
+/* ---------- En-têtes de page ---------- */
+.page-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+    .page-header h1 {
+        margin: 0;
+        font-size: 1.8rem;
+    }
+
+/* ---------- Tableaux ---------- */
+.table {
+    margin-bottom: 0;
+}
+
+    .table thead th {
+        background: var(--brand-soft);
+        color: var(--brand-dark);
+        border: none;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+        letter-spacing: 0.05em;
+        padding: 0.9rem 1rem;
+    }
+
+    .table td {
+        padding: 0.9rem 1rem;
+        vertical-align: middle;
+    }
+
+.table-hover tbody tr:hover {
+    background: #f5f7ff;
+}
+
+/* ---------- Formulaires ---------- */
+.form-control,
+.form-select {
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    padding: 0.6rem 0.9rem;
+}
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--brand);
+    }
+
+label,
+.control-label {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.text-danger,
+.field-validation-error {
+    font-size: 0.875rem;
+}
+
+/* ---------- Pages d'authentification ---------- */
+.auth-card {
+    max-width: 440px;
+    margin: 2rem auto;
+}
+
+    .auth-card .card-body {
+        padding: 2rem;
+    }
+
+.auth-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.auth-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    background: var(--brand-soft);
+    color: var(--brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+}
+
+/* ---------- État vide ---------- */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--muted);
+}
+
+    .empty-state i {
+        font-size: 3rem;
+        color: #cbd5e1;
+    }
+
+/* ---------- Footer ---------- */
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    line-height: 60px;
+    background: #fff;
+    border-top: 1px solid #e2e8f0 !important;
+}
+
+/* ---------- Animation d'entrée ---------- */
+main {
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------- Format du prix : 3DT610 ---------- */
+.price-fmt {
+    display: inline-flex;
+    align-items: flex-start;
+    font-weight: 800;
+    line-height: 1;
+}
+
+    .price-fmt .pf-whole {
+        font-size: 1.6rem;
+    }
+
+    .price-fmt .pf-cur {
+        font-size: 0.7rem;
+        font-weight: 700;
+        margin-left: 2px;
+        position: relative;
+        top: 0.1em;
+        vertical-align: baseline;
+    }
+
+    .price-fmt .pf-mil {
+        font-size: 0.85rem;
+        font-weight: 700;
+        align-self: flex-end;
+        position: relative;
+        top: 0.1em;
+        vertical-align: baseline;
+    }
+
+.price-tag .price-fmt .pf-whole {
+    font-size: 1.7rem;
+}
+
+/* ---------- Pagination ---------- */
+.pagination .page-link {
+    color: var(--brand);
+    border-radius: 8px;
+    margin: 0 2px;
+    border: none;
+    font-weight: 600;
+}
+
+.pagination .page-item.active .page-link {
+    background: var(--brand);
+    color: #fff;
+}
+
+.pagination .page-link:hover {
+    background: var(--brand-soft);
+}
+/* Navbar : recherche plus compacte */
+.app-navbar .form-control {
+    min-width: 160px;
+}
+
+/* Prix : alignement dans les tableaux */
+td .price-fmt .pf-whole {
+    font-size: 1.2rem;
+}
+
+td .price-fmt .pf-cur {
+    font-size: 0.6rem;
+    top: 0;
+}
+
+td .price-fmt .pf-mil {
+    font-size: 0.7rem;
+    align-self: flex-start;
+    top: 0.45em;
+    margin-left: 1px;
+}
+/* Prix dans les détails (dd.price-tag) */
+dd.price-tag .price-fmt .pf-whole {
+    font-size: 1.8rem;
+}
+
+dd.price-tag .price-fmt .pf-cur {
+    font-size: 0.65rem;
+    top: 0.15em;
+}
+
+dd.price-tag .price-fmt .pf-mil {
+    font-size: 0.8rem;
+    align-self: flex-end;
+    top: 0;
+    margin-left: 1px;
+}

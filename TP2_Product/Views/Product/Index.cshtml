@@ -1,0 +1,150 @@
+@model IEnumerable<Product>
+
+@{
+    ViewData["Title"] = "Liste des produits";
+    bool canManage = User.IsInRole("Admin");
+
+    string currentUrl = Context.Request.Path + Context.Request.QueryString;
+
+    string? val = ViewBag.Val as string;
+    int? categoryId = ViewBag.CategoryId as int?;
+    bool inStock = ViewBag.InStock is bool b && b;
+    string? sort = ViewBag.Sort as string;
+    int pageNum = (int)ViewBag.Page;
+    int totalPages = (int)ViewBag.TotalPages;
+    int total = (int)ViewBag.Total;
+}
+
+<div class="page-header">
+    <h1><i class="bi bi-bag me-2 text-primary"></i>Liste des produits</h1>
+    @if (canManage)
+    {
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>Nouvel article
+        </a>
+    }
+</div>
+
+<!-- Filtres -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" asp-action="Index" class="row g-3 align-items-end">
+            <div class="col-lg-3 col-md-6">
+                <label class="form-label">Recherche</label>
+                <input type="search" name="val" value="@val" class="form-control" placeholder="Nom ou catégorie..." />
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <label class="form-label">Catégorie</label>
+                <select name="categoryId" class="form-select" asp-items="ViewBag.Categories">
+                    <option value="">Toutes les catégories</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label">Trier par</label>
+                <select name="sort" class="form-select">
+                    <option value="" selected="@(string.IsNullOrEmpty(sort))">Par défaut</option>
+                    <option value="name" selected="@(sort == "name")">Nom (A-Z)</option>
+                    <option value="price_asc" selected="@(sort == "price_asc")">Prix croissant</option>
+                    <option value="price_desc" selected="@(sort == "price_desc")">Prix décroissant</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" name="inStock" value="true" id="inStock" checked="@inStock" />
+                    <label class="form-check-label fw-normal" for="inStock">En stock seulement</label>
+                </div>
+            </div>
+            <div class="col-lg-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-fill">
+                    <i class="bi bi-funnel me-1"></i>Filtrer
+                </button>
+                <a asp-action="Index" class="btn btn-outline-primary" title="Réinitialiser">
+                    <i class="bi bi-x-lg"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<p class="text-muted">@total produit(s) trouvé(s)</p>
+
+@if (!Model.Any())
+{
+    <div class="card">
+        <div class="card-body empty-state">
+            <i class="bi bi-inbox"></i>
+            <h5 class="mt-3">Aucun produit trouvé</h5>
+            <a asp-action="Index" class="btn btn-outline-primary mt-2">Réinitialiser les filtres</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var product in Model)
+        {
+            var photoPath = "~/images/" + (product.Image ?? "noimage.jpg");
+            <div class="col">
+                <div class="card product-card h-100 @(product.QteStock <= 0 ? "out-of-stock" : "")">
+                    <div class="image-wrap">
+                        <img class="card-img-top imageThumbnail" src="@photoPath" alt="@product.Name" asp-append-version="true" />
+                        <partial name="_StockBadge" model="product.QteStock" />
+                    </div>
+                    <div class="card-body">
+                        <div>
+                            <span class="category-pill">@product.Category.CategoryName</span>
+                        </div>
+                        <h5 class="card-title product-title mt-2">@product.Name</h5>
+                        <div class="price-tag"><partial name="_Price" model="product.Price" /></div>
+                        @if (canManage)
+                        {
+                            <div class="stock-info mt-1">
+                                <i class="bi bi-boxes me-1"></i>Quantité exacte : @product.QteStock
+                            </div>
+                        }
+                    </div>
+                    <div class="card-footer bg-white border-0 pb-3 d-flex flex-wrap gap-2 justify-content-center">
+                        <a asp-controller="Product" asp-action="Details" asp-route-id="@product.ProductId" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-eye me-1"></i>View
+                        </a>
+                        @if (canManage)
+                        {
+                            <a asp-action="Edit" asp-controller="Product" class="btn btn-primary btn-sm" asp-route-id="@product.ProductId" asp-route-returnUrl="@currentUrl">
+                                <i class="bi bi-pencil me-1"></i>Edit
+                            </a>
+                            <a asp-action="Delete" asp-controller="Product" class="btn btn-danger btn-sm" asp-route-id="@product.ProductId" asp-route-returnUrl="@currentUrl">
+                                <i class="bi bi-trash me-1"></i>Delete
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (totalPages > 1)
+    {
+        <nav class="mt-4" aria-label="Pagination">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(pageNum == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@(pageNum - 1)"
+                       asp-route-val="@val" asp-route-categoryId="@categoryId"
+                       asp-route-inStock="@inStock" asp-route-sort="@sort">&laquo;</a>
+                </li>
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == pageNum ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-page="@i"
+                           asp-route-val="@val" asp-route-categoryId="@categoryId"
+                           asp-route-inStock="@inStock" asp-route-sort="@sort">@i</a>
+                    </li>
+                }
+                <li class="page-item @(pageNum == totalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@(pageNum + 1)"
+                       asp-route-val="@val" asp-route-categoryId="@categoryId"
+                       asp-route-inStock="@inStock" asp-route-sort="@sort">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    }
+}

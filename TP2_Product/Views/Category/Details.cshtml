@@ -1,0 +1,29 @@
+@model Category
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="page-header">
+    <h1><i class="bi bi-info-circle me-2 text-primary"></i>Détails de la catégorie</h1>
+</div>
+
+<div class="card" style="max-width: 520px;">
+    <div class="card-body p-4">
+        <dl class="row mb-0">
+            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.CategoryName)</dt>
+            <dd class="col-sm-8 fw-semibold">@Html.DisplayFor(model => model.CategoryName)</dd>
+        </dl>
+    </div>
+    <div class="card-footer bg-white border-0 p-3 d-flex gap-2">
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model?.CategoryId" class="btn btn-primary">
+                <i class="bi bi-pencil me-1"></i>Edit
+            </a>
+        }
+        <a asp-action="Index" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left me-1"></i>Back to List
+        </a>
+    </div>
+</div>

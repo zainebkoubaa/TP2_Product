@@ -1,0 +1,5 @@
+﻿@model float
+@{
+    var parts = TP_Product.Helpers.PriceHelper.Format(Model).Split("DT");
+}
+<span class="price-fmt"><span class="pf-whole">@parts[0]</span><sup class="pf-cur">DT</sup><sub class="pf-mil">@parts[1]</sub></span>

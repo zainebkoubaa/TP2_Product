@@ -1,0 +1,167 @@
+﻿@using TP_Product.Models.Repositories
+@inject IProductRepository ProductRepo
+@inject ICategorieRepository CategRepo
+@{
+    ViewData["Title"] = "Home Page";
+    bool isAdmin = User.IsInRole("Admin");
+    const int seuil = 10;
+}
+
+@if (isAdmin)
+{
+    var products = ProductRepo.GetAll();
+    int totalProduits = products.Count;
+    int totalCategories = CategRepo.GetAll().Count();
+    int ruptures = products.Count(p => p.QteStock <= 0);
+    int limites = products.Count(p => p.QteStock > 0 && p.QteStock <= seuil);
+    var aReapprovisionner = products
+        .Where(p => p.QteStock <= seuil)
+        .OrderBy(p => p.QteStock)
+        .Take(5)
+        .ToList();
+
+    <div class="page-header">
+        <h1><i class="bi bi-speedometer2 me-2 text-primary"></i>Tableau de bord</h1>
+        <a asp-controller="Product" asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>Nouvel article
+        </a>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-6 col-xl-3">
+            <div class="card h-100">
+                <div class="card-body d-flex align-items-center gap-3">
+                    <div class="auth-icon m-0"><i class="bi bi-bag"></i></div>
+                    <div>
+                        <div class="text-muted">Produits</div>
+                        <div class="fs-2 fw-bold">@totalProduits</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card h-100">
+                <div class="card-body d-flex align-items-center gap-3">
+                    <div class="auth-icon m-0"><i class="bi bi-tags"></i></div>
+                    <div>
+                        <div class="text-muted">Catégories</div>
+                        <div class="fs-2 fw-bold">@totalCategories</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card h-100">
+                <div class="card-body d-flex align-items-center gap-3">
+                    <div class="auth-icon m-0" style="background:#ffedd5; color:#c2410c;"><i class="bi bi-exclamation-triangle"></i></div>
+                    <div>
+                        <div class="text-muted">Stock limité</div>
+                        <div class="fs-2 fw-bold">@limites</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card h-100">
+                <div class="card-body d-flex align-items-center gap-3">
+                    <div class="auth-icon m-0" style="background:#fee2e2; color:#b91c1c;"><i class="bi bi-x-circle"></i></div>
+                    <div>
+                        <div class="text-muted">En rupture</div>
+                        <div class="fs-2 fw-bold">@ruptures</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="mb-3"><i class="bi bi-box-seam me-2 text-primary"></i>Produits à réapprovisionner</h5>
+            @if (!aReapprovisionner.Any())
+            {
+                <div class="empty-state py-4">
+                    <i class="bi bi-check-circle"></i>
+                    <p class="mt-2 mb-0">Tous les produits sont bien approvisionnés.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Produit</th>
+                                <th>Prix</th>
+                                <th>Quantité</th>
+                                <th>Disponibilité</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var p in aReapprovisionner)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@p.Name</td>
+                                    <td><partial name="_Price" model="p.Price" /></td>
+                                    <td>@p.QteStock</td>
+                                    <td><partial name="_StockBadge" model="p.QteStock" /></td>
+                                    <td class="text-end">
+                                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@p.ProductId" class="btn btn-primary btn-sm">
+                                            <i class="bi bi-pencil me-1"></i>Modifier
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="card text-center mb-4">
+        <div class="card-body py-5">
+            <div class="auth-icon"><i class="bi bi-box-seam"></i></div>
+            <h1 class="display-5">Gestion des Articles</h1>
+            <p class="text-muted fs-5 mb-4">Consultez les produits et les catégories de votre catalogue.</p>
+            <a asp-controller="Product" asp-action="Index" class="btn btn-primary btn-lg me-2">
+                <i class="bi bi-bag me-1"></i>Voir les produits
+            </a>
+            <a asp-controller="Category" asp-action="Index" class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-tags me-1"></i>Voir les catégories
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 product-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-search fs-1 text-primary"></i>
+                    <h5 class="mt-3">Recherche rapide</h5>
+                    <p class="text-muted mb-0">Trouvez un article par son nom ou sa catégorie.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 product-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-shield-check fs-1 text-primary"></i>
+                    <h5 class="mt-3">Accès sécurisé</h5>
+                    <p class="text-muted mb-0">Gestion réservée aux administrateurs.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 product-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-tags fs-1 text-primary"></i>
+                    <h5 class="mt-3">Catalogue organisé</h5>
+                    <p class="text-muted mb-0">Produits classés par catégories.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}

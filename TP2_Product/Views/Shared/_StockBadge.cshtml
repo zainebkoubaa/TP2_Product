@@ -1,0 +1,28 @@
+﻿@model int
+@{
+    const int seuil = 10;
+
+    string css;
+    string icon;
+    string label;
+
+    if (Model <= 0)
+    {
+        css = "stock-out";
+        icon = "bi-x-circle-fill";
+        label = "Rupture de stock";
+    }
+    else if (Model <= seuil)
+    {
+        css = "stock-low";
+        icon = "bi-exclamation-triangle-fill";
+        label = $"Stock limité (reste {Model})";
+    }
+    else
+    {
+        css = "stock-ok";
+        icon = "bi-check-circle-fill";
+        label = "En stock";
+    }
+}
+<span class="stock-badge @css"><i class="bi @icon me-1"></i>@label</span>
